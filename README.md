@@ -1,2 +1,2 @@
-# Bin_Picking_PSA
+# PSA2023_UR
 Repositório do projeto de PSA Bin Picking
