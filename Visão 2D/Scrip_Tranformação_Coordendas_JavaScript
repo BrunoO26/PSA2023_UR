@@ -1,0 +1,135 @@
+
+
+  const K = [
+    [3243.0, 0.0, 640.0],
+    [0.0, 3243.0, 480.0],
+    [0.0, 0.0, 1.0]
+  ];
+
+
+  const y = -0.055; // distância camera pinça
+  const Pos_cam = [-0.61495, -0.352, 0.17121, 3.10, 0.032, -0.023 - 3.1415];
+  const T = [[Pos_cam[0], Pos_cam[1], Pos_cam[2]]];
+	const TT = [
+    [[Pos_cam[0]],
+    [Pos_cam[1]],
+    [Pos_cam[2]]]
+  ];
+  const R = [
+    [1, 0, 0],
+    [0, -1, 0],
+    [0, 0, -1]
+  ];
+
+  const h = -0.55; // altura
+  const nw = [[0, 0, 1]]; // normal em relação ao mundo
+  const nwT = [
+    [0],
+    [0],
+    [1]
+  ];
+
+
+  var nc = multiply(R, nwT); // normal em relação à camera
+  const c = [[VEngine.point_to_xyA.x], [VEngine.point_to_xyA.y], [1]]; // centroide
+	const cT = [
+    [VEngine.point_to_xyA.x],
+    [VEngine.point_to_xyA.y],
+    [1]
+  ];
+
+
+	const Kinv = [
+    [0.00030836, 0, -0.1973],
+    [0, 0.00030836, -0.1480],
+    [0, 0, 1]
+  ];
+	const ncT = [[0, 0, 1]];
+	var passo1 = multiply(ncT,Kinv);
+	var passo2 = multiply(passo1,cT);
+	const passo3 = h/passo2;
+	var passo4 =multiply(Kinv,cT);
+	const elemento1 = passo3*passo4[0][0];
+	const elemento2 = passo3*passo4[1][0];
+	const elemento3 = passo3*passo4[2][0];
+	const test = [
+    [elemento1],
+    [elemento2],
+    [elemento3]
+  ];
+	
+	var posicao =multiply(R,test);
+	const X = (TT[0][0]) + (posicao[0][0]);
+	const Y = TT[0][1] + posicao[1][0];
+	const Z = posicao[2][0] + TT[0][2];
+	
+	VEngine.varF.value = TT[0][0];
+	VEngine.varG.value = posicao[0][0];
+	VEngine.X.value = (VEngine.varG.value + VEngine.varF.value)
+
+VEngine.varF.value = TT[0][1];
+VEngine.varG.value = posicao[1][0];
+VEngine.Y.value = (VEngine.varG.value + VEngine.varF.value)
+
+VEngine.varF.value = TT[0][2];
+VEngine.varG.value = posicao[2][0];
+VEngine.Z.value = (VEngine.varG.value + VEngine.varF.value)
+
+
+	const pos = [
+    [VEngine.X.value],
+    [VEngine.Y.value],
+    [VEngine.Z.value]
+  ];
+
+VEngine.varF.value = TT[0][0];
+	VEngine.varG.value = pos[0][0];
+	VEngine.difX.value = VEngine.varG.value - VEngine.varF.value
+
+VEngine.varF.value = TT[0][1];
+VEngine.varG.value = pos[1][0];
+VEngine.difY.value = VEngine.varG.value - VEngine.varF.value
+
+VEngine.varF.value = TT[0][2];
+VEngine.varG.value = pos[2][0];
+VEngine.difZ.value = VEngine.varG.value - VEngine.varF.value
+
+
+
+
+	function multiply(m1, m2) {
+  var result = [];
+  for (var i = 0; i < m1.length; i++) {
+    result[i] = [];
+    for (var j = 0; j < m2[0].length; j++) {
+      var sum = 0;
+      for (var k = 0; k < m1[0].length; k++) {
+        sum += m1[i][k] * m2[k][j];
+      }
+      result[i][j] = sum;
+    }
+  }
+  return result;
+}
+	function multiplyElement(m1, m2) {
+  var result = [];
+  for (var i = 0; i < m1.length; i++) {
+    result[i] = [];
+    for (var j = 0; j < m2[0].length; j++) {
+      var sum = 0;
+      for (var k = 0; k < m1[0].length; k++) {
+        sum += m1 * m2[k][j];
+      }
+      result[i][j] = sum;
+    }
+  }
+  return result;
+}
+
+
+
+
+	VEngine.varH.value = pos;
+	
+
+	// VEngine.varC.value = VEngine.varH.value [0][0] 
